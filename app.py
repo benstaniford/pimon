@@ -58,11 +58,27 @@ def generate_disk_pie_chart(volume_path):
         colors = ['#d65d0e', '#458588']  # Gruvbox orange and aqua
         explode = (0.1, 0)  # Slightly offset the 'Used' slice
 
+        # Format the sizes in a human-readable format (e.g., GB)
+        used_size = usage.used / (1024**3)  # Convert bytes to GB
+        free_size = usage.free / (1024**3)  # Convert bytes to GB
+        total_size = usage.total / (1024**3)  # Convert bytes to GB
+
         # Create the pie chart
         plt.figure(figsize=(4, 4))
-        plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
-                startangle=140, explode=explode, shadow=True)
-        plt.title(f"Disk Usage: {volume_path}", color="#ebdbb2")
+        plt.pie(
+            sizes, 
+            labels=labels, 
+            colors=colors, 
+            autopct='%1.1f%%', 
+            startangle=140, 
+            explode=explode, 
+            shadow=True
+        )
+        plt.title(
+            f"Disk Usage: {volume_path}\n"
+            f"Total: {total_size:.2f} GB, Used: {used_size:.2f} GB, Free: {free_size:.2f} GB",
+            color="#ebdbb2"
+        )
         plt.axis('equal')  # Equal aspect ratio ensures a circular pie chart
 
         # Save the chart to a file
@@ -72,6 +88,7 @@ def generate_disk_pie_chart(volume_path):
         return chart_path
     except Exception as e:
         return None
+
 
 @app.route("/")
 def status():
