@@ -9,7 +9,7 @@ COPY app.py /app/
 COPY static /app/static/
 
 # Install Flask
-RUN pip --root-user-action=ignore install flask psutil
+RUN pip install --root-user-action=ignore flask psutil
 
 # Expose the Flask port
 EXPOSE 5000
