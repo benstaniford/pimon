@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
 ```
 Replace:
-    <your_hostname> with your actual hostname.
-    /path/to/volume1, /path/to/volume2, etc., with the paths to the volumes you want to monitor.
+- <your_hostname> with your actual hostname.
+- /path/to/volume1, /path/to/volume2, etc., with the paths to the volumes you want to monitor.
 
 
