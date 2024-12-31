@@ -91,12 +91,12 @@ Steps to Deploy in Portainer:
 - Login to Portainer: Open your browser and go to http://localhost:9000 (or the IP address of the machine where Portainer is running).
 
 - Create a New Stack:
- - Click on "Stacks" in the left sidebar.
- - Click "Add stack".
+    - Click on "Stacks" in the left sidebar.
+    - Click "Add stack".
 
 - Add the Docker Compose Configuration:
- - In the "Name" field, give your stack a name (e.g., pimon).
- - In the "Web editor" section, paste the following Docker Compose configuration:
+    - In the "Name" field, give your stack a name (e.g., pimon).
+    - In the "Web editor" section, paste the following Docker Compose configuration:
 ```yaml
 version: '3'
         services:
@@ -111,12 +111,12 @@ version: '3'
               - /path/to/volume2:/volume2
             restart: unless-stopped
 ```
- - Replace:
-  - <your_hostname> with the actual hostname.
-  - /path/to/volume1, /path/to/volume2, etc., with the volumes you want to monitor.
+    - Replace:
+        - <your_hostname> with the actual hostname.
+        - /path/to/volume1, /path/to/volume2, etc., with the volumes you want to monitor.
 
- - Deploy the Stack:
-  - Click "Deploy the stack" to start the Flask app using Docker Compose through Portainer.
+    - Deploy the Stack:
+        - Click "Deploy the stack" to start the Flask app using Docker Compose through Portainer.
 
 - Once deployed, you can view the logs and manage the container directly from the Portainer interface.
 
