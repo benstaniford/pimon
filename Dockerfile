@@ -8,7 +8,7 @@ WORKDIR /app
 COPY app.py /app/
 
 # Install Flask
-RUN pip install flask
+RUN pip install flask psutil
 
 # Expose the Flask port
 EXPOSE 5000
