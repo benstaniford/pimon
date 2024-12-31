@@ -48,7 +48,7 @@ def status():
         <h1>{hostname} Status</h1>
         <table>
             <tr><th>Metric</th><th>Value</th></tr>
-            <tr><td>Temperature</td><td>{temp}</td></tr>
+            <tr><td>CPU Temperature</td><td>{temp}</td></tr>
             {cpu_usage_rows}
         </table>
         <footer>&copy; 2024 Raspberry Pi Monitor</footer>
