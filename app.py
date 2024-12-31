@@ -58,6 +58,9 @@ def generate_disk_pie_chart(volume_path):
         colors = ['#d65d0e', '#458588']  # Gruvbox orange and aqua
         explode = (0.1, 0)  # Slightly offset the 'Used' slice
 
+        # Set the labels to be gruvbox white
+        plt.rcParams['text.color'] = '#ebdbb2'
+
         # Format the sizes in a human-readable format (e.g., GB)
         used_size = usage.used / (1024**3)  # Convert bytes to GB
         free_size = usage.free / (1024**3)  # Convert bytes to GB
