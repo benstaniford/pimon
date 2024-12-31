@@ -13,7 +13,7 @@ To install and run the `nerwander/pimon` Flask web app from Docker Hub, follow t
 
 #### Prerequisites:
 - Make sure Docker is installed on your machine. You can download Docker from the official website: [Install Docker](https://docs.docker.com/get-docker/) although for the Raspberry Pi 5, I found 
-[this guide|https://www.jpaul.me/2024/07/how-to-install-docker-on-a-raspberry-pi-5/] to be the most helpful.
+[this guide](https://www.jpaul.me/2024/07/how-to-install-docker-on-a-raspberry-pi-5/) to be the most helpful.
 
 #### Pull the Docker Image
 To pull the image from Docker Hub, open a terminal and run the following command:
