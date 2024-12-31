@@ -50,6 +50,14 @@ def get_cpu_usage():
     except Exception as e:
         return f"Error: {e}"
 
+def generate_sizes_and_units(size):
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    for unit in units:
+        if size < 1024:
+            return size, unit
+        size /= 1024
+    return size, units[-1]
+
 def generate_disk_pie_chart(volume_path):
     try:
         usage = psutil.disk_usage(volume_path)
@@ -61,10 +69,8 @@ def generate_disk_pie_chart(volume_path):
         # Set the labels to be gruvbox white
         plt.rcParams['text.color'] = '#ebdbb2'
 
-        # Format the sizes in a human-readable format (e.g., GB)
-        used_size = usage.used / (1024**3)  # Convert bytes to GB
-        free_size = usage.free / (1024**3)  # Convert bytes to GB
-        total_size = usage.total / (1024**3)  # Convert bytes to GB
+        [used_size, used_units] = generate_sizes_and_units(usage.used)
+        [free_size, free_units] = generate_sizes_and_units(usage.free)
 
         # Create the pie chart
         plt.figure(figsize=(4, 4))
@@ -79,7 +85,7 @@ def generate_disk_pie_chart(volume_path):
         )
         plt.title(
             f"Disk Usage: {volume_path}\n"
-            f"Used: {used_size:.2f} GB, Free: {free_size:.2f} GB",
+            f"Used: {used_size:.2f} {used_units}, Free: {free_size:.2f} {free_units}",
             color="#ebdbb2"
         )
         plt.axis('equal')  # Equal aspect ratio ensures a circular pie chart
