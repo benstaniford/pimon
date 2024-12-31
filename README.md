@@ -1,2 +1,2 @@
 # pimon
-A very simple docker container for showing the temperature and CPU utilisation and disk status of a raspberry pi
+A very simple docker container for showing the temperature, CPU utilisation and disk status of a Raspberry Pi
