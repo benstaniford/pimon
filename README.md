@@ -88,7 +88,7 @@ Prerequisites:
 
 Steps to Deploy in Portainer:
 
-- Login to Portainer: Open your browser and go to http://localhost:9000 (or the IP address of the machine where Portainer is running).
+- Login to Portainer: Open your browser and go to http://localhost:9000 (or the IP address and port of the machine where Portainer is running).
 
 - Create a New Stack:
     - Click on "Stacks" in the left sidebar.
