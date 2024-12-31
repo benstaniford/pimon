@@ -82,6 +82,7 @@ def status():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{hostname} status</title>
         <link rel="stylesheet" href="{url_for('static', filename='styles.css')}">
+        <link rel="icon" href="static/favicon.png" type="image/png">
     </head>
     <body>
         <h1>{hostname} status</h1>
@@ -98,7 +99,7 @@ def status():
             {disk_charts}
         </div>
 
-        <footer>&copy; 2024 Raspberry Pi Monitor</footer>
+        <footer>&copy; 2024 Ben Staniford</footer>
     </body>
     </html>
     """

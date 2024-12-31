@@ -84,3 +84,7 @@ a:hover {
     text-decoration: underline;
 }
 
+.icon {
+  background-image: url('favicon.png');
+}
+
