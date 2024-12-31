@@ -8,11 +8,12 @@ WORKDIR /app
 COPY app.py /app/
 COPY static /app/static/
 
-# Install Flask
-RUN pip install --disable-pip-version-check --root-user-action=ignore flask psutil matplotlib
+# Install Flask and Gunicorn (and other dependencies)
+RUN pip install --disable-pip-version-check --root-user-action=ignore flask psutil matplotlib docker gunicorn
 
 # Expose the Flask port
 EXPOSE 5000
 
-# Run the Flask app
-CMD ["python", "app.py"]
+# Use Gunicorn to run the Flask app
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+
