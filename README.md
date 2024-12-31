@@ -26,8 +26,8 @@ docker pull nerwander/pimon:latest
 
 #### Once the image is pulled, you can run the Flask web app in a container. However, there are a few things to note:
 
-    Volumes must be added for the disk status to work. You should mount any directories you want to check the disk usage for.
-    Set the HOSTNAME environment variable to specify the hostname of your Raspberry Pi (or the system where the app is running).
+Volumes must be added for the disk status to work. You should mount any directories you want to check the disk usage for.
+Set the HOSTNAME environment variable to specify the hostname of your Raspberry Pi (or the system where the app is running).
 
 #### Run the following command to start the container with the necessary volumes and environment variable, the disk usage will be shown for the mounted directories:
 
