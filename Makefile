@@ -18,4 +18,4 @@ run:
 	@echo "Stopping and removing existing container..."
 	docker stop ${CONTAINER_NAME}
 	docker rm ${CONTAINER_NAME}
-	docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} -e HOSTNAME=$(shell hostname) --privileged ${CONTAINER_NAME}:${TAG}
+	docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} -v /media/ben/Didgeridoo:/Didgeridoo -e HOSTNAME=$(shell hostname) --privileged ${CONTAINER_NAME}:${TAG}

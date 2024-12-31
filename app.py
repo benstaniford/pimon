@@ -61,7 +61,7 @@ def status():
         cpu_usage_rows += f"<tr><td>Core {i} Usage</td><td>{core:.2f}%</td></tr>"
 
     # Generate disk usage charts for mounted volumes
-    volumes = ["/", "/app"]  # Example of volumes to check (adjust as needed)
+    volumes = ["/", "/app", "/Didgeridoo"]  # Example of volumes to check (adjust as needed)
     disk_charts = ""
     for volume in volumes:
         chart_path = generate_disk_pie_chart(volume)
