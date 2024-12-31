@@ -111,12 +111,12 @@ version: '3'
               - /path/to/volume2:/volume2
             restart: unless-stopped
 ```
-    - Replace:
-        - <your_hostname> with the actual hostname.
-        - /path/to/volume1, /path/to/volume2, etc., with the volumes you want to monitor.
+- Replace:
+    - <your_hostname> with the actual hostname.
+    - /path/to/volume1, /path/to/volume2, etc., with the volumes you want to monitor.
 
-    - Deploy the Stack:
-        - Click "Deploy the stack" to start the Flask app using Docker Compose through Portainer.
+- Deploy the Stack:
+    - Click "Deploy the stack" to start the Flask app using Docker Compose through Portainer.
 
 - Once deployed, you can view the logs and manage the container directly from the Portainer interface.
 
