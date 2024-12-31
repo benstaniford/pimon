@@ -62,4 +62,62 @@ Replace:
 - <your_hostname> with your actual hostname.
 - /path/to/volume1, /path/to/volume2, etc., with the paths to the volumes you want to monitor.
 
+#### Start the Application
+
+Run the following command to start the application using Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This will start the Flask app and bind it to port 5000. You can access it at http://localhost:5000.
+Stop the Application
+
+#### To stop the application, run:
+
+```bash
+docker-compose down
+```
+
+### **Alternately, Deploying the container via Portainer**
+
+If you prefer to use Portainer for managing Docker containers via a web interface, follow these steps:
+Prerequisites:
+
+#### Install and run Portainer. You can find installation instructions at Portainer Documentation.
+
+Steps to Deploy in Portainer:
+
+- Login to Portainer: Open your browser and go to http://localhost:9000 (or the IP address of the machine where Portainer is running).
+
+- Create a New Stack:
+ - Click on "Stacks" in the left sidebar.
+ - Click "Add stack".
+
+- Add the Docker Compose Configuration:
+ - In the "Name" field, give your stack a name (e.g., pimon).
+ - In the "Web editor" section, paste the following Docker Compose configuration:
+```yaml
+version: '3'
+        services:
+          pimon:
+            image: nerwander/pimon:latest
+            ports:
+              - "5000:5000"
+            environment:
+              - HOSTNAME=<your_hostname>
+            volumes:
+              - /path/to/volume1:/volume1
+              - /path/to/volume2:/volume2
+            restart: unless-stopped
+```
+ - Replace:
+  - <your_hostname> with the actual hostname.
+  - /path/to/volume1, /path/to/volume2, etc., with the volumes you want to monitor.
+
+ - Deploy the Stack:
+  - Click "Deploy the stack" to start the Flask app using Docker Compose through Portainer.
+
+- Once deployed, you can view the logs and manage the container directly from the Portainer interface.
+
 
