@@ -1,6 +1,6 @@
 import os
-from flask import Flask
 import psutil
+from flask import Flask, render_template_string, url_for
 
 app = Flask(__name__)
 
@@ -27,23 +27,35 @@ def get_cpu_usage():
 def status():
     temp = get_temperature()
     hostname = os.environ.get("HOSTNAME", "unknown")
-    
-    # Get CPU usage details
     cpu_avg, cpu_per_core = get_cpu_usage()
-    cpu_usage_table = "<tr><td>Average CPU Usage</td><td>{:.2f}%</td></tr>".format(cpu_avg)
+
+    # Generate CPU usage rows
+    cpu_usage_rows = f"<tr><td>Average CPU Usage</td><td>{cpu_avg:.2f}%</td></tr>"
     for i, core in enumerate(cpu_per_core):
-        cpu_usage_table += f"<tr><td>Core {i} Usage</td><td>{core:.2f}%</td></tr>"
-    
-    temperature_table = f"<tr><td>Temperature</td><td>{temp}</td></tr>"
-    
-    # Combine everything into a single HTML table
-    html_table = f"""
-    <table border="1">
-        {temperature_table}
-        {cpu_usage_table}
-    </table>
+        cpu_usage_rows += f"<tr><td>Core {i} Usage</td><td>{core:.2f}%</td></tr>"
+
+    # Generate HTML content
+    html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{hostname} Status</title>
+        <link rel="stylesheet" href="{url_for('static', filename='styles.css')}">
+    </head>
+    <body>
+        <h1>{hostname} Status</h1>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Temperature</td><td>{temp}</td></tr>
+            {cpu_usage_rows}
+        </table>
+        <footer>&copy; 2024 Raspberry Pi Monitor</footer>
+    </body>
+    </html>
     """
-    return f"<h1>{hostname} Status</h1>{html_table}"
+    return render_template_string(html)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

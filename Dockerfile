@@ -6,9 +6,10 @@ WORKDIR /app
 
 # Copy the application files
 COPY app.py /app/
+COPY static /app/static/
 
 # Install Flask
-RUN pip install flask psutil
+RUN pip --root-user-action=ignore install flask psutil
 
 # Expose the Flask port
 EXPOSE 5000
