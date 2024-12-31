@@ -66,7 +66,12 @@ def status():
     for volume in volumes:
         chart_path = generate_disk_pie_chart(volume)
         if chart_path:
-            disk_charts += f"<div><img src='/{chart_path}' alt='Disk Usage for {volume}'></div>"
+            disk_charts += f"""
+            <div>
+                <img src='/{chart_path}' alt='Disk Usage for {volume}'>
+                <p>{volume}</p>
+            </div>
+            """
 
     # Generate the HTML
     html = f"""
@@ -75,18 +80,24 @@ def status():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{hostname} Status</title>
+        <title>{hostname} status</title>
         <link rel="stylesheet" href="{url_for('static', filename='styles.css')}">
     </head>
     <body>
-        <h1>{hostname} Status</h1>
+        <h1>{hostname} status</h1>
+
+        <h2>CPU Usage</h2>
         <table>
             <tr><th>Metric</th><th>Value</th></tr>
             <tr><td>Temperature</td><td>{temp}</td></tr>
             {cpu_usage_rows}
         </table>
+
         <h2>Disk Usage</h2>
-        {disk_charts}
+        <div class="pie-chart-container">
+            {disk_charts}
+        </div>
+
         <footer>&copy; 2024 Raspberry Pi Monitor</footer>
     </body>
     </html>
@@ -95,4 +106,3 @@ def status():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-

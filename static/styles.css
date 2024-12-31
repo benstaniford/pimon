@@ -16,6 +16,12 @@ h1 {
     border-bottom: 2px solid #b16286; /* Gruvbox purple */
 }
 
+h2 {
+    color: #d79921; /* Gruvbox yellow */
+    text-align: center;
+    margin-top: 30px;
+}
+
 table {
     width: 70%;
     margin: 20px auto;
@@ -53,6 +59,18 @@ footer {
     color: #ebdbb2; /* Gruvbox foreground */
     font-size: 14px;
     border-top: 2px solid #d65d0e; /* Gruvbox orange */
+}
+
+.pie-chart-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.pie-chart-container div {
+    text-align: center;
 }
 
 /* Links styling */
