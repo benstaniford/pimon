@@ -1,11 +1,39 @@
 import os
 import psutil
+import subprocess
 import matplotlib.pyplot as plt
 from flask import Flask, render_template_string, url_for, send_file
 
 app = Flask(__name__)
 
-# Function to get temperature
+def get_mounted_volumes():
+    try:
+        result = subprocess.run(['mount'], capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            raise Exception("Failed to retrieve mount points")
+
+        # Filter the results to find volumes (usually those with '/mnt' or '/volumes' paths)
+        volumes = []
+        for line in result.stdout.splitlines():
+            # Example of a line: "/dev/sda1 on /mnt/data type ext4 (rw,relatime)"
+            if ' on ' in line:
+                parts = line.split(' on ')
+                source = parts[0].strip()
+                target = parts[1].split(' ')[0].strip()  # Path where the volume is mounted
+                volumes.append(target)
+
+        # Remove stuff that won't be of interest
+        volumes = [v for v in volumes if os.path.isdir(v)]
+        volumes = [v for v in volumes if not v.startswith(('/dev/', '/etc/'))]
+        volumes = [v for v in volumes if not v == '/dev' or v == '/etc']
+
+        return volumes
+
+    except Exception as e:
+        print(f"Error retrieving mounted volumes: {e}")
+        return []
+
 def get_temperature():
     try:
         with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
@@ -15,7 +43,6 @@ def get_temperature():
     except Exception as e:
         return f"Error: {e}"
 
-# Function to get CPU usage
 def get_cpu_usage():
     try:
         cpu_per_core = psutil.cpu_percent(interval=1, percpu=True)
@@ -24,7 +51,6 @@ def get_cpu_usage():
     except Exception as e:
         return f"Error: {e}"
 
-# Function to generate disk usage pie chart
 def generate_disk_pie_chart(volume_path):
     try:
         usage = psutil.disk_usage(volume_path)
@@ -50,18 +76,15 @@ def generate_disk_pie_chart(volume_path):
 
 @app.route("/")
 def status():
-    # Get data for the status page
     temp = get_temperature()
     hostname = os.environ.get("HOSTNAME", "unknown")
     cpu_avg, cpu_per_core = get_cpu_usage()
 
-    # Generate CPU usage rows
     cpu_usage_rows = f"<tr><td>Average CPU Usage</td><td>{cpu_avg:.2f}%</td></tr>"
     for i, core in enumerate(cpu_per_core):
         cpu_usage_rows += f"<tr><td>Core {i} Usage</td><td>{core:.2f}%</td></tr>"
 
-    # Generate disk usage charts for mounted volumes
-    volumes = ["/", "/app", "/Didgeridoo"]  # Example of volumes to check (adjust as needed)
+    volumes = get_mounted_volumes()
     disk_charts = ""
     for volume in volumes:
         chart_path = generate_disk_pie_chart(volume)
@@ -73,7 +96,6 @@ def status():
             </div>
             """
 
-    # Generate the HTML
     html = f"""
     <!DOCTYPE html>
     <html lang="en">
