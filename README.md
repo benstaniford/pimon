@@ -45,7 +45,6 @@ If you prefer to deploy the application using Docker Compose, follow these steps
 
 Create a docker-compose.yml file in your project directory with the following content:
 ```yaml
-version: '3'
 services:
   pimon:
     image: nerwander/pimon:latest
@@ -98,18 +97,17 @@ Steps to Deploy in Portainer:
     - In the "Name" field, give your stack a name (e.g., pimon).
     - In the "Web editor" section, paste the following Docker Compose configuration:
 ```yaml
-version: '3'
-        services:
-          pimon:
-            image: nerwander/pimon:latest
-            ports:
-              - "5000:5000"
-            environment:
-              - HOSTNAME=<your_hostname>
-            volumes:
-              - /path/to/volume1:/volume1
-              - /path/to/volume2:/volume2
-            restart: unless-stopped
+services:
+  pimon:
+    image: nerwander/pimon:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - HOSTNAME=<your_hostname>
+    volumes:
+      - /path/to/volume1:/volume1
+      - /path/to/volume2:/volume2
+    restart: unless-stopped
 ```
 - Replace:
     - <your_hostname> with the actual hostname.
