@@ -7,7 +7,7 @@ A very simple docker container for showing the temperature, CPU utilisation and 
 
 ## Flask Web App Deployment Instructions (nerwander/pimon)
 
-### 1. **Install the Docker Image from Docker Hub**
+### **To Install the Docker Image from Docker Hub**
 
 To install and run the `nerwander/pimon` Flask web app from Docker Hub, follow these steps:
 
@@ -22,7 +22,7 @@ To pull the image from Docker Hub, open a terminal and run the following command
 docker pull nerwander/pimon:latest
 ```
 
-### Run the Container via Docker
+### **Running the Container via Docker**
 
 #### Once the image is pulled, you can run the Flask web app in a container. However, there are a few things to note:
 
