@@ -79,7 +79,7 @@ def generate_disk_pie_chart(volume_path):
         )
         plt.title(
             f"Disk Usage: {volume_path}\n"
-            f"Total: {total_size:.2f} GB, Used: {used_size:.2f} GB, Free: {free_size:.2f} GB",
+            f"Used: {used_size:.2f} GB, Free: {free_size:.2f} GB",
             color="#ebdbb2"
         )
         plt.axis('equal')  # Equal aspect ratio ensures a circular pie chart
