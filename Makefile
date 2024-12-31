@@ -1,5 +1,6 @@
 # Variables
-TAG = 0.1
+TAG = latest
+DOCKER_USERNAME = nerwander
 CONTAINER_NAME = pimon
 PORT = 5000
 
@@ -12,10 +13,17 @@ all: build
 build:
 	@echo "Building Docker image with tag: $(TAG)..."
 	docker build -t $(CONTAINER_NAME):$(TAG) .
-	
-run:
-	# If there's an existing container, stop and remove it
-	@echo "Stopping and removing existing container..."
+
+clean:
+	@echo "Removing Docker image with tag: $(TAG)..."
 	docker stop ${CONTAINER_NAME}
 	docker rm ${CONTAINER_NAME}
-	docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} -v /media/ben/Didgeridoo:/Didgeridoo -e HOSTNAME=$(shell hostname) --privileged ${CONTAINER_NAME}:${TAG}
+	docker rmi $(CONTAINER_NAME):$(TAG)
+	
+run:
+	docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} -e HOSTNAME=$(shell hostname) --privileged ${CONTAINER_NAME}:${TAG}
+
+push:
+	@echo "Pushing Docker image with tag: $(TAG)..."
+	docker tag $(CONTAINER_NAME):$(TAG) $(DOCKER_USERNAME)/$(CONTAINER_NAME):$(TAG)
+	docker push $(DOCKER_USERNAME)/$(CONTAINER_NAME):$(TAG)

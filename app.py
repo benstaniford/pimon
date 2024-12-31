@@ -16,17 +16,16 @@ def get_mounted_volumes():
         # Filter the results to find volumes (usually those with '/mnt' or '/volumes' paths)
         volumes = []
         for line in result.stdout.splitlines():
-            # Example of a line: "/dev/sda1 on /mnt/data type ext4 (rw,relatime)"
             if ' on ' in line:
                 parts = line.split(' on ')
                 source = parts[0].strip()
                 target = parts[1].split(' ')[0].strip()  # Path where the volume is mounted
                 volumes.append(target)
 
-        # Remove stuff that won't be of interest
         volumes = [v for v in volumes if os.path.isdir(v)]
-        volumes = [v for v in volumes if not v.startswith(('/dev/', '/etc/'))]
-        volumes = [v for v in volumes if not v == '/dev' or v == '/etc']
+        volumes = [v for v in volumes if not v.startswith(('/dev/', '/etc/', '/proc/', '/sys/'))]
+        volumes = [v for v in volumes if not v == '/dev' or v == '/etc' or v == '/proc' or v == '/sys']
+
 
         return volumes
 
