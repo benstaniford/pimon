@@ -23,6 +23,7 @@ def get_mounted_volumes():
 
         volumes = [v for v in volumes if os.path.isdir(v)]
         volumes = [v for v in volumes if not v.startswith(('/dev/', '/etc/', '/proc/', '/sys/'))]
+        volumes = [v for v in volumes if not v == '/dev' or v == '/etc' or v == '/proc' or v == '/sys']
 
         return volumes
 
