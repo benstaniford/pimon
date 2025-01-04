@@ -47,6 +47,15 @@ def get_cpu_usage():
     except Exception as e:
         return f"Error: {e}"
 
+def format_size(size):
+    """Convert bytes into human-readable format (e.g., 1.2 GB)."""
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    for unit in units:
+        if size < 1024:
+            return f"{size:.2f} {unit}"
+        size /= 1024
+    return f"{size:.2f} {units[-1]}"
+
 def generate_pie_chart(data, labels, title, filename):
     try:
         colors = ['#d65d0e', '#458588']
@@ -77,21 +86,42 @@ def generate_memory_charts():
     mem = psutil.virtual_memory()
     swap = psutil.swap_memory()
 
+    ram_used = mem.used
+    ram_total = mem.total
+    swap_used = swap.used
+    swap_total = swap.total
+
     ram_chart = generate_pie_chart(
-        [mem.used, mem.available],
+        [ram_used, ram_total - ram_used],
         ['Used', 'Available'],
-        "RAM Usage",
+        f"RAM Usage: {format_size(ram_used)} / {format_size(ram_total)}",
         "ram_usage.png"
     )
 
     swap_chart = generate_pie_chart(
-        [swap.used, swap.free],
+        [swap_used, swap_total - swap_used],
         ['Used', 'Free'],
-        "SWAP Usage",
+        f"SWAP Usage: {format_size(swap_used)} / {format_size(swap_total)}",
         "swap_usage.png"
     )
 
     return ram_chart, swap_chart
+
+def generate_disk_pie_chart(volume_path):
+    try:
+        usage = psutil.disk_usage(volume_path)
+        used_size = usage.used
+        total_size = usage.total
+
+        chart_path = generate_pie_chart(
+            [used_size, total_size - used_size],
+            ['Used', 'Free'],
+            f"Disk Usage: {format_size(used_size)} / {format_size(total_size)}",
+            f"{volume_path.strip('/').replace('/', '_')}_disk.png"
+        )
+        return chart_path
+    except Exception as e:
+        return None
 
 @app.route("/")
 def status():
@@ -106,12 +136,7 @@ def status():
     volumes = get_mounted_volumes()
     disk_charts = ""
     for volume in volumes:
-        chart_path = generate_pie_chart(
-            [psutil.disk_usage(volume).used, psutil.disk_usage(volume).free],
-            ['Used', 'Free'],
-            f"Disk Usage: {volume}",
-            f"{volume.strip('/').replace('/', '_')}_disk.png"
-        )
+        chart_path = generate_disk_pie_chart(volume)
         if chart_path:
             disk_charts += f"""
             <div>
