@@ -13,19 +13,16 @@ def get_mounted_volumes():
         if result.returncode != 0:
             raise Exception("Failed to retrieve mount points")
 
-        # Filter the results to find volumes (usually those with '/mnt' or '/volumes' paths)
         volumes = []
         for line in result.stdout.splitlines():
             if ' on ' in line:
                 parts = line.split(' on ')
                 source = parts[0].strip()
-                target = parts[1].split(' ')[0].strip()  # Path where the volume is mounted
+                target = parts[1].split(' ')[0].strip()
                 volumes.append(target)
 
         volumes = [v for v in volumes if os.path.isdir(v)]
         volumes = [v for v in volumes if not v.startswith(('/dev/', '/etc/', '/proc/', '/sys/'))]
-        volumes = [v for v in volumes if not v == '/dev' or v == '/etc' or v == '/proc' or v == '/sys']
-
 
         return volumes
 
@@ -37,7 +34,7 @@ def get_temperature():
     try:
         with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
             temp_milli = int(f.read().strip())
-            temp = temp_milli / 1000.0  # Convert to Celsius
+            temp = temp_milli / 1000.0
             return f"{temp:.2f}°C"
     except Exception as e:
         return f"Error: {e}"
@@ -50,54 +47,51 @@ def get_cpu_usage():
     except Exception as e:
         return f"Error: {e}"
 
-def generate_sizes_and_units(size):
-    units = ['B', 'KB', 'MB', 'GB', 'TB']
-    for unit in units:
-        if size < 1024:
-            return size, unit
-        size /= 1024
-    return size, units[-1]
-
-def generate_disk_pie_chart(volume_path):
+def generate_pie_chart(data, labels, title, filename):
     try:
-        usage = psutil.disk_usage(volume_path)
-        labels = ['Used', 'Free']
-        sizes = [usage.used, usage.free]
-        colors = ['#d65d0e', '#458588']  # Gruvbox orange and aqua
-        explode = (0.1, 0)  # Slightly offset the 'Used' slice
-
-        # Set the labels to be gruvbox white
+        colors = ['#d65d0e', '#458588']
+        explode = (0.1, 0)
         plt.rcParams['text.color'] = '#ebdbb2'
 
-        [used_size, used_units] = generate_sizes_and_units(usage.used)
-        [free_size, free_units] = generate_sizes_and_units(usage.free)
-
-        # Create the pie chart
         plt.figure(figsize=(4, 4))
         plt.pie(
-            sizes, 
-            labels=labels, 
-            colors=colors, 
-            autopct='%1.1f%%', 
-            startangle=140, 
-            explode=explode, 
+            data,
+            labels=labels,
+            colors=colors,
+            autopct='%1.1f%%',
+            startangle=140,
+            explode=explode,
             shadow=True
         )
-        plt.title(
-            f"Disk Usage: {volume_path}\n"
-            f"Used: {used_size:.2f} {used_units}, Free: {free_size:.2f} {free_units}",
-            color="#ebdbb2"
-        )
-        plt.axis('equal')  # Equal aspect ratio ensures a circular pie chart
-
-        # Save the chart to a file
-        chart_path = f"static/{volume_path.strip('/').replace('/', '_')}_disk.png"
+        plt.title(title, color="#ebdbb2")
+        plt.axis('equal')
+        chart_path = f"static/{filename}"
         plt.savefig(chart_path, transparent=True, bbox_inches='tight')
-        plt.close()  # Close the figure to free memory
+        plt.close()
         return chart_path
     except Exception as e:
+        print(f"Error generating pie chart: {e}")
         return None
 
+def generate_memory_charts():
+    mem = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+
+    ram_chart = generate_pie_chart(
+        [mem.used, mem.available],
+        ['Used', 'Available'],
+        "RAM Usage",
+        "ram_usage.png"
+    )
+
+    swap_chart = generate_pie_chart(
+        [swap.used, swap.free],
+        ['Used', 'Free'],
+        "SWAP Usage",
+        "swap_usage.png"
+    )
+
+    return ram_chart, swap_chart
 
 @app.route("/")
 def status():
@@ -112,7 +106,12 @@ def status():
     volumes = get_mounted_volumes()
     disk_charts = ""
     for volume in volumes:
-        chart_path = generate_disk_pie_chart(volume)
+        chart_path = generate_pie_chart(
+            [psutil.disk_usage(volume).used, psutil.disk_usage(volume).free],
+            ['Used', 'Free'],
+            f"Disk Usage: {volume}",
+            f"{volume.strip('/').replace('/', '_')}_disk.png"
+        )
         if chart_path:
             disk_charts += f"""
             <div>
@@ -120,6 +119,8 @@ def status():
                 <p>{volume}</p>
             </div>
             """
+
+    ram_chart, swap_chart = generate_memory_charts()
 
     html = f"""
     <!DOCTYPE html>
@@ -141,6 +142,18 @@ def status():
             {cpu_usage_rows}
         </table>
 
+        <h2>Memory Usage</h2>
+        <div class="pie-chart-container">
+            <div>
+                <img src='/{ram_chart}' alt='RAM Usage'>
+                <p>RAM</p>
+            </div>
+            <div>
+                <img src='/{swap_chart}' alt='SWAP Usage'>
+                <p>SWAP</p>
+            </div>
+        </div>
+
         <h2>Disk Usage</h2>
         <div class="pie-chart-container">
             {disk_charts}
@@ -154,3 +167,4 @@ def status():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
