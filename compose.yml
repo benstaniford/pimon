@@ -1,0 +1,12 @@
+services:
+  pimon:
+    image: nerwander/pimon:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - HOSTNAME=<your_hostname>
+    volumes:
+      - /path/to/volume1:/volume1
+      - /path/to/volume2:/volume2
+    restart: unless-stopped
+
